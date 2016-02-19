@@ -16,38 +16,88 @@ var _ = { };
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
+      if (n === undefined) {
+          return array[0];
+      } else {
+          return array.slice(0, n);
+      }
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
+
   _.last = function(array, n) {
+      if (n === undefined) {
+          return array[array.length - 1];
+      } else if (n === 0) {
+          return [];
+      } else {
+          return array.slice(-n, array.length);
+      }
   };
+
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
+      if (Array.isArray(collection)) {
+          for (var i = 0; i < collection.length; i++) {
+              iterator(collection[i], i, collection);
+          }
+      } else {
+          for (var key in collection) {
+              iterator(collection[key], key, collection);
+          }
+      }
   };
+
+  var car = {ford: 'mustang', bentley: 'phantom', VW: 'golf'};
+  var myArray = [1,2,3,4,5,6];
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
-  _.indexOf = function(array, target){
+  _.indexOf = function(array, target) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i] === target)
+          return i;
+      }
+      return -1;
   };
 
   // Return all elements of an array that pass a truth test ('iterator' function argument)
   _.filter = function(collection, iterator) {
+      if (iterator(collection, true)) {
+      }
+      return collection;
   };
 
   // Return all elements of an array that don't pass a truth test (the 'iterator' function argument)
   _.reject = function(collection, iterator) {
+    if (iterator(collection, false)) {
+    }
+    return collection;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+      for (var i = 0; i < array.length; i++) {
+          if (array[i] === array[i++]) {
+              array.slice(0,1);
+          } else {
+              return index[i];
+          }
+      }
   };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    var newArray = [];
+    for (var i = 0; i < array.length; i++) {
+      newArray.push(iterator(array[i]));
+    }
+    return newArray;
+
   };
 
   // Takes an array of objects and returns and array of the values of
@@ -58,22 +108,67 @@ var _ = { };
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
+      var newArr = [];
+      if(typeof methodName === 'string') {
+        list.forEach(function (value, index) {
+          newArr.push(value[methodName](args));
+        });
+      } else {
+        list.forEach(function (value, index) {
+          newArr.push(methodName.apply(value, args));
+      });
+    }
+    return newArr;
   };
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
   _.reduce = function(collection, iterator, initialValue) {
+
+
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
+
+
   _.contains = function(collection, target) {
-  };
+      if (collection instanceof Array) {
+        for (var i = 0; i < collection.length; i++) {
+          if (collection[i] === target) {
+            return true;
+          } else {
+            collection[i] = false;
+          }
+        }
+      } else if (collection instanceof Object) {
+        for (var key in collection) {
+          if (collection[key] === target) {
+            return true;
+          } else {
+            collection[key] = false;
+          }
+        }
+      }
+      return false;
+    };
+
+
 
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-  };
+    if (Array.isArray(collection)) {
+      for(var i = 0; i < collection.length; i++) {
+          iterator(collection[i], true);
+      }
+      } else if (Object.isObject(collection)) {
+        for (var key in collection) {
+          iterator(collection[key], true);
+        }
+      }
+    };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
