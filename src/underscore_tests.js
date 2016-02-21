@@ -73,21 +73,24 @@ var _ = { };
 
   // Return all elements of an array that don't pass a truth test (the 'iterator' function argument)
   _.reject = function(collection, iterator) {
-    if (iterator(collection, false)) {
-    }
-    return collection;
-  };
+    var rej = [];
+    for(var i in collection){
+     if(!iterator(collection[i], i, collection))
+       rej.push(collection[i]);
+   }
+   return rej;
+ };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-      for (var i = 0; i < array.length; i++) {
-          if (array[i] === array[i++]) {
-              array.slice(0,1);
-          } else {
-              return index[i];
-          }
+    var newArray = [];
+    for (var i = 0; i < array.length; i++) {
+        if (!newArray.includes(array[i]))
+          newArray.push(array[i]);
       }
-  };
+      return newArray
+    };
+
 
 
   // Return the results of applying an iterator to each element.
@@ -104,6 +107,11 @@ var _ = { };
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(array, propertyName) {
+    var newArray = [];
+    for (var key in array) {
+      newArray.push(array[key][propertyName]);
+    }
+    return newArray;
   };
 
   // Calls the method named by methodName on each value in the list.
@@ -125,9 +133,13 @@ var _ = { };
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
   _.reduce = function(collection, iterator, initialValue) {
-
-
-
+    var sum = 0;
+    if (initialValue)
+      sum = initialValue;
+      for (var i = 0; i < collection.length; i++) {
+        sum = iterator(sum, collection[i]);
+      }
+      return sum;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -159,20 +171,21 @@ var _ = { };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    if (Array.isArray(collection)) {
-      for(var i = 0; i < collection.length; i++) {
-          iterator(collection[i], true);
+    if (collection.length === 0)
+      return true;
+    if (!iterator)
+      return true;
+    for(var i = 0; i < collection.length; i++) {
+      if (!iterator(collection[i]))
+        return false;
       }
-      } else if (Object.isObject(collection)) {
-        for (var key in collection) {
-          iterator(collection[key], true);
-        }
-      }
+      return true;
     };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    
   };
 
 
